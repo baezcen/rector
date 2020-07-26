@@ -14,12 +14,24 @@ use PhpParser\Node\UnionType;
 use Rector\Core\Rector\AbstractRector;
 use Rector\Core\RectorDefinition\CodeSample;
 use Rector\Core\RectorDefinition\RectorDefinition;
+use Rector\NodeTypeResolver\Node\AttributeKey;
+use Symplify\SmartFileSystem\SmartFileInfo;
 
 /**
  * @see \Rector\Order\Tests\Rector\ClassMethod\OrderConstructorDependenciesByTypeAlphabeticallyRector\OrderConstructorDependenciesByTypeAlphabeticallyRectorTest
  */
 final class OrderConstructorDependenciesByTypeAlphabeticallyRector extends AbstractRector
 {
+    /**
+     * @var array
+     */
+    private $skipPatterns = [];
+
+    public function __construct(array $skipPatterns = ['*/ValueObject/*'])
+    {
+        $this->skipPatterns = $skipPatterns;
+    }
+
     public function getDefinition(): RectorDefinition
     {
         return new RectorDefinition('Order __constructor dependencies by type A-Z', [
@@ -111,6 +123,12 @@ PHP
             return true;
         }
 
+        /** @var SmartFileInfo $smartFileInfo */
+        $smartFileInfo = $classMethod->getAttribute(AttributeKey::FILE_INFO);
+        if ($this->isFileInfoMatch($smartFileInfo)) {
+            return true;
+        }
+
         if ($classMethod->params === []) {
             return true;
         }
@@ -130,10 +148,28 @@ PHP
         return $param->type instanceof NullableType ? $param->type->type : $param->type;
     }
 
-    private function hasParamWithNoType(ClassMethod $classMethod)
+    private function hasParamWithNoType(ClassMethod $classMethod): bool
     {
         foreach ($classMethod->params as $param) {
             if ($param->type === null) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Match file against matches, no patterns provided, then it matches
+     */
+    private function isFileInfoMatch(SmartFileInfo $smartFileInfo): bool
+    {
+        if ($this->skipPatterns === []) {
+            return true;
+        }
+
+        foreach ($this->skipPatterns as $pattern) {
+            if (fnmatch($pattern, $smartFileInfo->getRelativeFilePath(), FNM_NOESCAPE)) {
                 return true;
             }
         }

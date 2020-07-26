@@ -2,13 +2,13 @@
 
 namespace Rector\Order\Tests\Rector\ClassMethod\OrderConstructorDependenciesByTypeAlphabeticallyRector\Fixture;
 
-class SkipHasOptionalParam
+class SkipParamWithNoType
 {
     public function __construct(
         LatteToTwigConverter $latteToTwigConverter,
-        SymfonyStyle $symfonyStyle,
+        $symfonyStyle,
         LatteAndTwigFinder $latteAndTwigFinder,
-        SmartFileSystem $smartFileSystem = null
+        SmartFileSystem $smartFileSystem
     ) {
     }
 }

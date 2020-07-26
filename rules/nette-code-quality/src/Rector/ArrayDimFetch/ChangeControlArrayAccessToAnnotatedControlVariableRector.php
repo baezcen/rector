@@ -55,10 +55,10 @@ final class ChangeControlArrayAccessToAnnotatedControlVariableRector extends Abs
     private $alreadyInitializedAssignsClassMethodObjectHashes = [];
 
     public function __construct(
-        VarAnnotationManipulator $varAnnotationManipulator,
         ControlDimFetchAnalyzer $controlDimFetchAnalyzer,
+        MethodNamesByInputNamesResolver $methodNamesByInputNamesResolver,
         NetteControlNaming $netteControlNaming,
-        MethodNamesByInputNamesResolver $methodNamesByInputNamesResolver
+        VarAnnotationManipulator $varAnnotationManipulator
     ) {
         $this->controlDimFetchAnalyzer = $controlDimFetchAnalyzer;
         $this->netteControlNaming = $netteControlNaming;

@@ -48,8 +48,8 @@ final class ChangeFormArrayAccessToAnnotatedControlVariableRector extends Abstra
     private $varAnnotationManipulator;
 
     public function __construct(
-        FormVariableInputNameTypeResolver $formVariableInputNameTypeResolver,
         ControlDimFetchAnalyzer $controlDimFetchAnalyzer,
+        FormVariableInputNameTypeResolver $formVariableInputNameTypeResolver,
         NetteControlNaming $netteControlNaming,
         VarAnnotationManipulator $varAnnotationManipulator
     ) {
